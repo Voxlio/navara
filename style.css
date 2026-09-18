@@ -1,0 +1,961 @@
+/* ==========================================================================
+   NAVARA OFFSHORE — Design system
+   --------------------------------------------------------------------------
+   Direction: nautical chart / depth sounding. The logo mark is an "N" with a
+   plumb-drop, so the page is built on depth: tonal bands get deeper as you go,
+   separated by a thin teal "waterline". Edges are near-square (2px) for an
+   engineered feel rather than a soft product-card look. Borders and tonal
+   fills do the work of separation; shadow is reserved for surfaces that
+   genuinely float (sticky masthead, enquiry panel).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  /* Depth ramp — surface to seabed */
+  --abyss:   #061426;
+  --navy:    #0B1F3A;  /* brand core, sampled from the logo artwork */
+  --hull:    #14304F;
+  --mist:    #EAF0F5;
+  --mist-dk: #D6E1EA;
+  --white:   #FFFFFF;
+
+  /* Accents */
+  --teal:    #0E8C88;  /* meets AA on white */
+  --teal-dk: #0A6D6A;
+  --beacon:  #35C4BE;  /* bright — dark backgrounds only */
+
+  /* Text */
+  --ink:     #101B26;
+  --slate:   #55636F;
+  --slate-lt:#8A97A3;
+  --on-dark:      #E4ECF3;
+  --on-dark-soft: #A9BCCE;
+
+  /* Type */
+  --font-display: 'Archivo', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'IBM Plex Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+  --t-xs:  0.8125rem;   /* 13px */
+  --t-sm:  0.9375rem;   /* 15px */
+  --t-base:1.0625rem;   /* 17px */
+  --t-md:  1.1875rem;   /* 19px */
+  --t-lg:  1.3125rem;   /* 21px */
+
+  /* Space — 4px base */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 5.5rem;
+
+  --shell: 1240px;
+  --gutter: 1.5rem;
+  --edge: 2px;          /* the house corner radius */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & base
+   -------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; padding: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--t-base);
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+ul, ol { list-style: none; }
+
+img, svg, video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Keyboard focus is always visible; mouse clicks stay clean. */
+:focus-visible {
+  outline: 3px solid var(--beacon);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--beacon); color: var(--navy); }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--s-4);
+  z-index: 200;
+  padding: var(--s-3) var(--s-5);
+  background: var(--beacon);
+  color: var(--navy);
+  font-weight: 600;
+  border-radius: var(--edge);
+}
+.skip-link:focus { top: var(--s-3); }
+
+/* --------------------------------------------------------------------------
+   3. Typography
+   -------------------------------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.021em;
+  text-wrap: balance;
+}
+
+.t-display {
+  font-size: clamp(2.35rem, 5.2vw, 3.9rem);
+  line-height: 1.04;
+  letter-spacing: -0.032em;
+}
+
+.t-h1 {
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+}
+
+.t-h2 {
+  font-size: clamp(1.6rem, 2.7vw, 2.15rem);
+  letter-spacing: -0.024em;
+}
+
+.t-h3 { font-size: var(--t-lg); letter-spacing: -0.015em; }
+
+.t-h4 {
+  font-size: var(--t-md);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+/* Body copy sits under 75 characters per line. */
+.prose { max-width: 63ch; }
+.prose > * + * { margin-top: var(--s-4); }
+.prose p { color: var(--slate); }
+
+.lede {
+  font-size: clamp(var(--t-md), 1.6vw, var(--t-lg));
+  line-height: 1.55;
+  color: var(--slate);
+  max-width: 58ch;
+}
+
+.measure-wide { max-width: 72ch; }
+
+/* The waterline label: a short teal rule with a sentence-case caption.
+   Deliberately not a tracked-out all-caps eyebrow. */
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: var(--s-4);
+}
+.label::before {
+  content: "";
+  width: 34px;
+  height: 2px;
+  background: currentColor;
+  flex: none;
+}
+.label--center { justify-content: center; }
+
+/* --------------------------------------------------------------------------
+   4. Layout
+   -------------------------------------------------------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.band { padding-block: var(--s-9); }
+.band--tight { padding-block: var(--s-8); }
+.band--mist { background: var(--mist); }
+.band--deep { background: var(--navy); color: var(--on-dark); }
+.band--abyss { background: var(--abyss); color: var(--on-dark); }
+
+.band--deep .prose p,
+.band--abyss .prose p,
+.band--deep .lede,
+.band--abyss .lede { color: var(--on-dark-soft); }
+
+.band--deep .label,
+.band--abyss .label { color: var(--beacon); }
+
+/* Waterline: reserved for the shift into a dark band, which is the only
+   tonal change significant enough to earn a rule. */
+.band--deep,
+.band--abyss { border-top: 2px solid rgba(14, 140, 136, 0.55); }
+
+.center { text-align: center; }
+.center .lede,
+.center .prose { margin-inline: auto; }
+
+/* Headings invert automatically on dark bands — no per-element overrides. */
+.band--deep h1, .band--deep h2, .band--deep h3, .band--deep h4,
+.band--abyss h1, .band--abyss h2, .band--abyss h3, .band--abyss h4,
+.hero h1, .hero h2, .pagehead h1 { color: var(--white); }
+
+/* Spacing utilities */
+.mt-4 { margin-top: var(--s-4); }
+.mt-5 { margin-top: var(--s-5); }
+.mt-6 { margin-top: var(--s-6); }
+
+/* A short statement set in the display face — used once per page at most. */
+.pull {
+  font-family: var(--font-display);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--teal);
+}
+.band--deep .pull, .band--abyss .pull { color: var(--beacon); }
+
+.lede--ink { color: var(--ink); }
+
+.head { margin-bottom: var(--s-7); }
+.head--center { text-align: center; }
+.head--center .label { justify-content: center; }
+.head--center .lede { margin-inline: auto; }
+
+/* Split: asymmetric by default so it doesn't read as two equal boxes. */
+.split {
+  display: grid;
+  gap: var(--s-7);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .split { grid-template-columns: 1.05fr 0.95fr; gap: var(--s-8); }
+  .split--text-lead { grid-template-columns: 1.15fr 0.85fr; }
+  .split--media-lead { grid-template-columns: 0.85fr 1.15fr; }
+  .split--even { grid-template-columns: 1fr 1fr; }
+}
+
+/* Auto grid — cards size themselves, so a five-item row never crushes to
+   200px the way a fixed five-column grid does. */
+.grid {
+  display: grid;
+  gap: var(--s-5);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(15rem, 27vw, 19rem), 1fr));
+}
+.grid--wide { grid-template-columns: repeat(auto-fit, minmax(clamp(17rem, 30vw, 22rem), 1fr)); }
+
+/* A four-item row would otherwise break to 3 + 1 at desktop width. */
+@media (min-width: 1000px) {
+  .grid--4up { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* --------------------------------------------------------------------------
+   5. Buttons
+   -------------------------------------------------------------------------- */
+
+.btns { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+.btns--center { justify-content: center; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  border: 2px solid transparent;
+  border-radius: var(--edge);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease),
+              border-color 0.2s var(--ease);
+}
+
+.btn--solid { background: var(--teal); color: var(--white); }
+.btn--solid:hover { background: var(--teal-dk); }
+
+.btn--line {
+  border-color: var(--navy);
+  color: var(--navy);
+}
+.btn--line:hover { background: var(--navy); color: var(--white); }
+
+.btn--line-light {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--white);
+}
+.btn--line-light:hover { background: var(--white); color: var(--navy); border-color: var(--white); }
+
+.btn--block { width: 100%; }
+
+/* Inline text link with a growing underline — no arrow glyph appended. */
+.tlink {
+  display: inline-block;
+  font-weight: 600;
+  font-size: var(--t-sm);
+  color: var(--teal);
+  padding-bottom: 2px;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.25s var(--ease);
+}
+.tlink:hover, .tlink:focus-visible { background-size: 100% 2px; }
+
+/* --------------------------------------------------------------------------
+   6. Top bar & masthead
+   -------------------------------------------------------------------------- */
+
+.topbar {
+  background: var(--abyss);
+  color: var(--on-dark-soft);
+  font-size: var(--t-xs);
+  padding-block: 0.6rem;
+}
+.topbar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-5);
+}
+.topbar__group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-5); }
+.topbar a { color: inherit; transition: color 0.2s var(--ease); }
+.topbar a:hover { color: var(--beacon); }
+.topbar__item { display: inline-flex; align-items: center; gap: 0.45rem; }
+.topbar__item svg { width: 14px; height: 14px; flex: none; opacity: 0.8; }
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--mist-dk);
+  transition: box-shadow 0.25s var(--ease);
+}
+.masthead.is-stuck { box-shadow: 0 6px 24px rgba(11, 31, 58, 0.09); }
+
+.masthead__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  min-height: 84px;
+  transition: min-height 0.25s var(--ease);
+}
+.masthead.is-stuck .masthead__inner { min-height: 68px; }
+
+/* Brand lockup — logo mark plus a two-line wordmark */
+.brand { display: inline-flex; align-items: center; gap: 0.7rem; }
+.brand__mark {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex: none;
+  transition: width 0.25s var(--ease), height 0.25s var(--ease);
+}
+.masthead.is-stuck .brand__mark { width: 34px; height: 34px; }
+
+.brand__word {
+  display: grid;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--navy);
+}
+.brand__word b {
+  font-size: 1.22rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.brand__word span {
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.33em;
+  color: var(--teal);
+  margin-top: 3px;
+}
+
+.nav { display: flex; align-items: center; gap: var(--s-6); }
+.nav__link {
+  position: relative;
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--ink);
+  padding-block: var(--s-2);
+  transition: color 0.2s var(--ease);
+}
+.nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--teal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s var(--ease);
+}
+.nav__link:hover { color: var(--teal); }
+.nav__link:hover::after { transform: scaleX(1); }
+.nav__link[aria-current="page"] { color: var(--teal); font-weight: 600; }
+.nav__link[aria-current="page"]::after { transform: scaleX(1); }
+
+.nav__cta { display: none; }
+
+.burger {
+  display: none;
+  width: 46px; height: 46px;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--mist-dk);
+  border-radius: var(--edge);
+  cursor: pointer;
+}
+.burger__bars { position: relative; width: 20px; height: 2px; background: var(--navy); display: block; }
+.burger__bars::before,
+.burger__bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 20px; height: 2px;
+  background: var(--navy);
+  transition: transform 0.22s var(--ease), top 0.22s var(--ease);
+}
+.burger__bars::before { top: -6px; }
+.burger__bars::after { top: 6px; }
+.burger[aria-expanded="true"] .burger__bars { background: transparent; }
+.burger[aria-expanded="true"] .burger__bars::before { top: 0; transform: rotate(45deg); }
+.burger[aria-expanded="true"] .burger__bars::after { top: 0; transform: rotate(-45deg); }
+
+@media (max-width: 960px) {
+  .burger { display: inline-flex; }
+  .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--s-4) var(--gutter) var(--s-5);
+    background: var(--white);
+    border-bottom: 2px solid var(--teal);
+    box-shadow: 0 18px 30px rgba(11, 31, 58, 0.12);
+    display: none;
+  }
+  .nav.is-open { display: flex; }
+  .nav__link {
+    padding-block: var(--s-4);
+    border-bottom: 1px solid var(--mist);
+    font-size: var(--t-md);
+  }
+  .nav__link::after { display: none; }
+  /* The enquiry CTA follows the links into the mobile menu instead of
+     disappearing at narrow widths. */
+  .nav__cta { display: block; margin-top: var(--s-5); }
+  .masthead__cta { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   7. Hero (home)
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  background: var(--navy);
+  color: var(--white);
+  overflow: hidden;
+}
+
+/* Gradient is painted under the photograph, so a failed remote image leaves a
+   composed navy field rather than a blank box. */
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(120% 90% at 78% 8%, rgba(53, 196, 190, 0.22), transparent 60%),
+    linear-gradient(196deg, #123258 0%, var(--navy) 45%, var(--abyss) 100%);
+  background-color: var(--navy);
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+  filter: grayscale(0.4) contrast(1.06);
+}
+.hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(104deg, rgba(6, 20, 38, 0.95) 0%, rgba(11, 31, 58, 0.78) 48%, rgba(11, 31, 58, 0.36) 100%);
+}
+
+.hero__inner {
+  padding-block: clamp(5rem, 11vw, 8.5rem) clamp(4rem, 8vw, 6rem);
+  max-width: 47rem;
+}
+.hero__title { color: var(--white); }
+.hero .label { color: var(--beacon); }
+.hero__lede {
+  color: #C6D6E4;
+  margin-top: var(--s-5);
+  max-width: 44ch;
+}
+.hero .btns { margin-top: var(--s-6); }
+
+/* Instrument strip — reads like a bridge console readout and carries the
+   four things a prospective client actually wants to confirm. */
+.strip {
+  position: relative;
+  background: rgba(6, 20, 38, 0.66);
+  border-top: 2px solid var(--teal);
+  backdrop-filter: blur(6px);
+}
+.strip__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+.strip__cell {
+  padding: var(--s-5) var(--s-5) var(--s-5) 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  padding-left: var(--s-5);
+}
+.strip__cell:first-child { border-left: 0; padding-left: 0; }
+.strip__k {
+  font-family: var(--font-display);
+  font-size: var(--t-md);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.015em;
+}
+.strip__v {
+  font-size: var(--t-xs);
+  color: var(--on-dark-soft);
+  margin-top: 2px;
+}
+@media (max-width: 700px) {
+  .strip__cell { border-left: 0; padding-left: 0; border-top: 1px solid rgba(255,255,255,.14); }
+  .strip__cell:first-child { border-top: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   8. Page head (interior pages)
+   -------------------------------------------------------------------------- */
+
+.pagehead {
+  position: relative;
+  isolation: isolate;
+  background: var(--navy);
+  color: var(--white);
+  overflow: hidden;
+  border-bottom: 2px solid var(--teal);
+}
+.pagehead__media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(200deg, var(--hull), var(--navy) 60%, var(--abyss));
+}
+.pagehead__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+  filter: grayscale(0.45);
+}
+.pagehead__media::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(100deg, rgba(6,20,38,.93), rgba(11,31,58,.7));
+}
+.pagehead__inner { padding-block: clamp(3.5rem, 8vw, 5.75rem); max-width: 44rem; }
+.pagehead .label { color: var(--beacon); }
+.pagehead h1 { color: var(--white); }
+.pagehead .lede { color: #C6D6E4; margin-top: var(--s-4); }
+
+/* Breadcrumb */
+.crumbs {
+  display: flex;
+  gap: var(--s-2);
+  font-size: var(--t-xs);
+  color: var(--on-dark-soft);
+  margin-bottom: var(--s-5);
+}
+.crumbs a:hover { color: var(--beacon); }
+.crumbs li + li::before { content: "/"; margin-right: var(--s-2); opacity: 0.5; }
+.crumbs li { display: inline-flex; }
+
+/* --------------------------------------------------------------------------
+   9. Cards & content blocks
+   -------------------------------------------------------------------------- */
+
+/* Service card: a left keel-line that fills in on hover. No lift, no
+   drop-shadow — the border and fill carry the state change. */
+.svc {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-5) var(--s-5) var(--s-5) calc(var(--s-5) + 4px);
+  background: var(--white);
+  border: 1px solid var(--mist-dk);
+  border-radius: var(--edge);
+  transition: border-color 0.22s var(--ease), background-color 0.22s var(--ease);
+}
+.svc::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--mist-dk);
+  transition: background-color 0.22s var(--ease);
+}
+.svc:hover { border-color: #BFD0DD; }
+.svc:hover::before { background: var(--teal); }
+.svc h3, .svc h4 { color: var(--navy); }
+.svc p {
+  color: var(--slate);
+  font-size: var(--t-sm);
+  margin-top: var(--s-3);
+}
+.svc .checks { margin-top: var(--s-4); }
+.svc .tlink { margin-top: var(--s-5); align-self: flex-start; }
+/* Only stretch the paragraph when a link has to sit on the card's baseline —
+   otherwise a checklist would be pushed away from the copy it belongs to. */
+.svc:has(.tlink) > p:last-of-type { flex: 1 1 auto; }
+
+.band--mist .svc { background: var(--white); }
+
+/* Sector item — flat, rule-led, no card chrome */
+.sector {
+  padding-top: var(--s-4);
+  border-top: 2px solid var(--navy);
+}
+.sector h4 { color: var(--navy); }
+.sector p { color: var(--slate); font-size: var(--t-sm); margin-top: var(--s-2); }
+
+/* Panel — a light raised surface (used sparingly) */
+.panel {
+  padding: var(--s-6);
+  background: var(--white);
+  border: 1px solid var(--mist-dk);
+  border-top: 3px solid var(--teal);
+  border-radius: var(--edge);
+}
+.panel h3, .panel h4 { color: var(--navy); }
+.panel--dark {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 3px solid var(--beacon);
+}
+.panel--dark h3, .panel--dark h4 { color: var(--white); }
+
+/* Checklist */
+.checks { display: grid; gap: var(--s-3); }
+.checks--two { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--s-3) var(--s-5); }
+.checks li {
+  position: relative;
+  padding-left: 1.75rem;
+  font-size: var(--t-sm);
+  line-height: 1.5;
+}
+.checks li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.36em;
+  width: 9px; height: 9px;
+  border: 2px solid var(--teal);
+  border-top: 0; border-left: 0;
+  transform: rotate(45deg);
+}
+.band--deep .checks li::before,
+.band--abyss .checks li::before,
+.panel--dark .checks li::before { border-color: var(--beacon); }
+.band--deep .checks li,
+.band--abyss .checks li { color: var(--on-dark); }
+
+/* Sounding list — a depth-marked figure list. Genuinely ordinal content. */
+.steps { display: grid; gap: var(--s-6); counter-reset: step; }
+@media (min-width: 820px) { .steps { grid-template-columns: repeat(4, 1fr); } }
+.step { position: relative; padding-top: var(--s-5); border-top: 2px solid rgba(53, 196, 190, 0.35); counter-increment: step; }
+.step::before {
+  content: counter(step, decimal-leading-zero);
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--beacon);
+  margin-bottom: var(--s-3);
+}
+.step h4 { color: var(--white); }
+.step p { color: var(--on-dark-soft); font-size: var(--t-sm); margin-top: var(--s-2); }
+
+/* --------------------------------------------------------------------------
+   10. Figures (photography)
+   -------------------------------------------------------------------------- */
+
+.figure {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--edge);
+  /* Composed fallback: if the remote photograph fails, this stays on screen. */
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 28px),
+    linear-gradient(200deg, var(--hull), var(--navy) 55%, var(--abyss));
+  min-height: 15rem;
+}
+.figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.85) contrast(1.03);
+}
+.figure--tall { aspect-ratio: 4 / 5; }
+.figure--wide { aspect-ratio: 16 / 10; }
+.figure--square { aspect-ratio: 1 / 1; }
+
+/* Duotone wash pulls photography toward the brand navy. */
+.figure--wash::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(190deg, rgba(11, 31, 58, 0.34), rgba(6, 20, 38, 0.62));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Rule accent in the corner, echoing the waterline */
+.figure--keyline::before {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 42%; height: 3px;
+  background: var(--teal);
+  z-index: 2;
+}
+
+.figure.is-empty img { display: none; }
+
+/* --------------------------------------------------------------------------
+   11. Contact & forms
+   -------------------------------------------------------------------------- */
+
+.contact-layout { display: grid; gap: var(--s-7); }
+@media (min-width: 980px) { .contact-layout { grid-template-columns: 0.85fr 1.15fr; gap: var(--s-8); } }
+
+/* Order-independent: the first card carries the heavy rule, the rest a
+   hairline. (:first-of-type would have matched the wrong sibling here.) */
+.channel {
+  padding: var(--s-5) 0;
+  border-top: 2px solid var(--navy);
+}
+.channel + .channel { border-top: 1px solid var(--mist-dk); }
+.channel h4 { color: var(--navy); }
+.channel a {
+  display: inline-block;
+  margin-top: var(--s-2);
+  font-weight: 600;
+  color: var(--teal);
+  word-break: break-word;
+}
+.channel a:hover { color: var(--teal-dk); text-decoration: underline; }
+.channel p { color: var(--slate); font-size: var(--t-sm); margin-top: var(--s-2); }
+
+.form-panel {
+  padding: clamp(var(--s-5), 4vw, var(--s-7));
+  background: var(--white);
+  border: 1px solid var(--mist-dk);
+  border-top: 3px solid var(--teal);
+  border-radius: var(--edge);
+  box-shadow: 0 18px 42px rgba(11, 31, 58, 0.07);
+}
+
+.field { margin-bottom: var(--s-5); }
+.field label {
+  display: block;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: var(--s-2);
+}
+.field .req { color: var(--teal); }
+
+.control {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: var(--t-sm);
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid #C3D0DC;
+  border-radius: var(--edge);
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.control::placeholder { color: var(--slate-lt); }
+.control:hover { border-color: #A8B9C7; }
+.control:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(14, 140, 136, 0.16);
+}
+textarea.control { resize: vertical; min-height: 7rem; }
+select.control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2355636F' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+  padding-right: 2.5rem;
+}
+
+/* Invalid styling only after a submit attempt, so fields aren't red on load. */
+.form-panel.was-submitted .control:invalid {
+  border-color: #C2453B;
+  box-shadow: 0 0 0 3px rgba(194, 69, 59, 0.12);
+}
+
+.consent { font-size: var(--t-xs); color: var(--slate); margin-bottom: var(--s-5); }
+
+.form-status {
+  margin-top: var(--s-4);
+  padding: var(--s-4);
+  border-radius: var(--edge);
+  font-size: var(--t-sm);
+  border-left: 3px solid var(--teal);
+  background: var(--mist);
+  color: var(--ink);
+}
+.form-status[hidden] { display: none; }
+.form-status--error { border-left-color: #C2453B; background: #FBEDEC; }
+
+/* --------------------------------------------------------------------------
+   12. Footer
+   -------------------------------------------------------------------------- */
+
+.footer {
+  background: var(--abyss);
+  color: var(--on-dark-soft);
+  padding-block: var(--s-8) var(--s-5);
+  border-top: 2px solid var(--teal);
+}
+.footer__top {
+  display: grid;
+  gap: var(--s-6);
+  padding-bottom: var(--s-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+@media (min-width: 760px) { .footer__top { grid-template-columns: 1.6fr 1fr 1fr; } }
+@media (min-width: 1040px) { .footer__top { grid-template-columns: 2fr 1fr 1.2fr 1fr; } }
+
+.footer__brand { display: inline-flex; align-items: center; gap: 0.7rem; margin-bottom: var(--s-4); }
+.footer__brand img { width: 42px; height: 42px; object-fit: contain; }
+.footer__brand .brand__word { color: var(--white); }
+.footer__brand .brand__word span { color: var(--beacon); }
+.footer__tag { font-size: var(--t-sm); max-width: 34ch; }
+
+.footer h4 {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: var(--s-4);
+  letter-spacing: 0;
+}
+.footer li + li { margin-top: 0.6rem; }
+.footer li { font-size: var(--t-sm); }
+.footer a { transition: color 0.2s var(--ease); word-break: break-word; }
+.footer a:hover { color: var(--beacon); }
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--s-5);
+  font-size: var(--t-xs);
+  color: #7D91A4;
+}
+
+/* --------------------------------------------------------------------------
+   13. Motion
+   --------------------------------------------------------------------------
+   One orchestrated moment only: the hero settles on load. Sections do not
+   each fade-and-slide on scroll — that reads as boilerplate.
+   -------------------------------------------------------------------------- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.hero__inner > * {
+  animation: rise 0.7s var(--ease) both;
+}
+.hero__inner > *:nth-child(1) { animation-delay: 0.05s; }
+.hero__inner > *:nth-child(2) { animation-delay: 0.13s; }
+.hero__inner > *:nth-child(3) { animation-delay: 0.21s; }
+.hero__inner > *:nth-child(4) { animation-delay: 0.29s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. Print
+   -------------------------------------------------------------------------- */
+
+@media print {
+  .topbar, .masthead, .burger, .btns, .form-panel { display: none !important; }
+  body { color: #000; font-size: 11pt; }
+  .band { padding-block: 1rem; }
+  .band--deep, .band--abyss, .footer { background: #fff !important; color: #000 !important; }
+}
