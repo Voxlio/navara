@@ -1,0 +1,12 @@
+# Navara Offshore Limited — https://navaraoffshore.com/
+# Four public pages, all of them meant to be indexed.
+
+User-agent: *
+Allow: /
+
+# Nothing here is private, but there is no reason for a crawler to spend
+# its budget on the raw brand master or the build folder.
+Disallow: /images/navara%20logo.jpg
+Disallow: /.git/
+
+Sitemap: https://navaraoffshore.com/sitemap.xml

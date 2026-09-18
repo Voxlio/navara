@@ -16,22 +16,28 @@
 :root {
   color-scheme: light;
 
-  /* Depth ramp — surface to seabed */
+  /* Depth ramp — surface to seabed.
+     navy and mist are the approved brand values; abyss and hull are tonal
+     extensions of navy, used only as backgrounds. */
   --abyss:   #061426;
-  --navy:    #0B1F3A;  /* brand core, sampled from the logo artwork */
+  --navy:    #0B1F3A;  /* brand — Navara Deep Navy */
   --hull:    #14304F;
-  --mist:    #EAF0F5;
-  --mist-dk: #D6E1EA;
-  --white:   #FFFFFF;
+  --mist:    #E9EEF3;  /* brand — Marine Mist */
+  --mist-dk: #D5DFE8;
+  --white:   #FFFFFF;  /* brand — White */
 
-  /* Accents */
-  --teal:    #0E8C88;  /* meets AA on white */
-  --teal-dk: #0A6D6A;
-  --beacon:  #35C4BE;  /* bright — dark backgrounds only */
+  /* Accents. The brand specifies teal as an accent rather than a dominant
+     colour, and at #1F8A8A it carries 4.15:1 on white — enough for rules and
+     borders, not for small text or a filled button. So the brand value does
+     the accent work and two deeper steps of the same hue carry text. */
+  --teal:     #1F8A8A;  /* brand — Maritime Teal; rules, borders, keel-lines */
+  --teal-ink: #176B6A;  /* teal as small text, and solid button fill */
+  --teal-dk:  #145E5D;  /* pressed / hover */
+  --beacon:   #35C4BE;  /* tint of the same hue — dark backgrounds only */
 
   /* Text */
-  --ink:     #101B26;
-  --slate:   #55636F;
+  --ink:     #202A35;  /* brand — Deep Graphite */
+  --slate:   #6B7785;  /* brand — Steel Grey; 4.56:1 on white */
   --slate-lt:#8A97A3;
   --on-dark:      #E4ECF3;
   --on-dark-soft: #A9BCCE;
@@ -189,7 +195,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-body);
   font-size: var(--t-sm);
   font-weight: 600;
-  color: var(--teal);
+  color: var(--teal-ink);
   margin-bottom: var(--s-4);
 }
 .label::before {
@@ -214,6 +220,13 @@ h1, h2, h3, h4 {
 
 .band { padding-block: var(--s-9); }
 .band--tight { padding-block: var(--s-8); }
+/* Brand Steel Grey is 4.56:1 on white but only 3.91:1 on Marine Mist, which
+   fails AA for body copy. Rather than patch every rule, the token itself is
+   re-scoped inside mist surfaces — descendants pick the darker value up
+   automatically. Same treatment on the enquiry panel, which is mist-filled. */
+.band--mist,
+.form-panel { --slate: #55636F; }
+
 .band--mist { background: var(--mist); }
 .band--deep { background: var(--navy); color: var(--on-dark); }
 .band--abyss { background: var(--abyss); color: var(--on-dark); }
@@ -229,7 +242,7 @@ h1, h2, h3, h4 {
 /* Waterline: reserved for the shift into a dark band, which is the only
    tonal change significant enough to earn a rule. */
 .band--deep,
-.band--abyss { border-top: 2px solid rgba(14, 140, 136, 0.55); }
+.band--abyss { border-top: 2px solid rgba(31, 138, 138, 0.55); }
 
 .center { text-align: center; }
 .center .lede,
@@ -252,7 +265,7 @@ h1, h2, h3, h4 {
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.015em;
-  color: var(--teal);
+  color: var(--teal-ink);
 }
 .band--deep .pull, .band--abyss .pull { color: var(--beacon); }
 
@@ -314,7 +327,7 @@ h1, h2, h3, h4 {
               border-color 0.2s var(--ease);
 }
 
-.btn--solid { background: var(--teal); color: var(--white); }
+.btn--solid { background: var(--teal-ink); color: var(--white); }
 .btn--solid:hover { background: var(--teal-dk); }
 
 .btn--line {
@@ -336,7 +349,7 @@ h1, h2, h3, h4 {
   display: inline-block;
   font-weight: 600;
   font-size: var(--t-sm);
-  color: var(--teal);
+  color: var(--teal-ink);
   padding-bottom: 2px;
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 0% 2px;
@@ -389,36 +402,20 @@ h1, h2, h3, h4 {
 }
 .masthead.is-stuck .masthead__inner { min-height: 68px; }
 
-/* Brand lockup — logo mark plus a two-line wordmark */
-.brand { display: inline-flex; align-items: center; gap: 0.7rem; }
-.brand__mark {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
+/* Brand lockup — the approved Navara artwork, one image, no type substitution.
+   The supplied logo is stacked (mark over NAVARA over OFFSHORE LIMITED); a
+   horizontal re-flow of the same artwork is used here because in the stacked
+   arrangement the descriptor line would land at roughly 3px in a header bar.
+   Sized by height with width:auto so the intrinsic 800x224 ratio is kept, and
+   the width/height attributes on the <img> reserve the box before it loads. */
+.brand { display: inline-flex; align-items: center; }
+.brand__lockup {
+  height: 52px;
+  width: auto;
   flex: none;
-  transition: width 0.25s var(--ease), height 0.25s var(--ease);
+  transition: height 0.25s var(--ease);
 }
-.masthead.is-stuck .brand__mark { width: 34px; height: 34px; }
-
-.brand__word {
-  display: grid;
-  font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1;
-  color: var(--navy);
-}
-.brand__word b {
-  font-size: 1.22rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-.brand__word span {
-  font-size: 0.67rem;
-  font-weight: 600;
-  letter-spacing: 0.33em;
-  color: var(--teal);
-  margin-top: 3px;
-}
+.masthead.is-stuck .brand__lockup { height: 46px; }
 
 .nav { display: flex; align-items: center; gap: var(--s-6); }
 .nav__link {
@@ -439,9 +436,9 @@ h1, h2, h3, h4 {
   transform-origin: left;
   transition: transform 0.25s var(--ease);
 }
-.nav__link:hover { color: var(--teal); }
+.nav__link:hover { color: var(--teal-ink); }
 .nav__link:hover::after { transform: scaleX(1); }
-.nav__link[aria-current="page"] { color: var(--teal); font-weight: 600; }
+.nav__link[aria-current="page"] { color: var(--teal-ink); font-weight: 600; }
 .nav__link[aria-current="page"]::after { transform: scaleX(1); }
 
 .nav__cta { display: none; }
@@ -499,6 +496,14 @@ h1, h2, h3, h4 {
      disappearing at narrow widths. */
   .nav__cta { display: block; margin-top: var(--s-5); }
   .masthead__cta { display: none; }
+}
+
+/* On a narrow phone the lockup and the burger have to share one line, so the
+   logo steps down rather than crowding it. Height only — the ratio is fixed. */
+@media (max-width: 420px) {
+  .brand__lockup,
+  .masthead.is-stuck .brand__lockup { height: 42px; }
+  .footer__brand img { height: 48px; }
 }
 
 /* --------------------------------------------------------------------------
@@ -677,7 +682,7 @@ h1, h2, h3, h4 {
   padding-top: var(--s-4);
   border-top: 2px solid var(--navy);
 }
-.sector h4 { color: var(--navy); }
+.sector h3, .sector h4 { color: var(--navy); }
 .sector p { color: var(--slate); font-size: var(--t-sm); margin-top: var(--s-2); }
 
 /* Panel — a light raised surface (used sparingly) */
@@ -733,7 +738,7 @@ h1, h2, h3, h4 {
   color: var(--beacon);
   margin-bottom: var(--s-3);
 }
-.step h4 { color: var(--white); }
+.step h3, .step h4 { color: var(--white); }
 .step p { color: var(--on-dark-soft); font-size: var(--t-sm); margin-top: var(--s-2); }
 
 /* --------------------------------------------------------------------------
@@ -795,12 +800,12 @@ h1, h2, h3, h4 {
   border-top: 2px solid var(--navy);
 }
 .channel + .channel { border-top: 1px solid var(--mist-dk); }
-.channel h4 { color: var(--navy); }
+.channel h3, .channel h4 { color: var(--navy); }
 .channel a {
   display: inline-block;
   margin-top: var(--s-2);
   font-weight: 600;
-  color: var(--teal);
+  color: var(--teal-ink);
   word-break: break-word;
 }
 .channel a:hover { color: var(--teal-dk); text-decoration: underline; }
@@ -823,7 +828,7 @@ h1, h2, h3, h4 {
   color: var(--navy);
   margin-bottom: var(--s-2);
 }
-.field .req { color: var(--teal); }
+.field .req { color: var(--teal-ink); }
 
 .control {
   width: 100%;
@@ -840,12 +845,12 @@ h1, h2, h3, h4 {
 .control:focus {
   outline: none;
   border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(14, 140, 136, 0.16);
+  box-shadow: 0 0 0 3px rgba(31, 138, 138, 0.16);
 }
 textarea.control { resize: vertical; min-height: 7rem; }
 select.control {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2355636F' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236B7785' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 12px;
@@ -891,13 +896,11 @@ select.control {
 @media (min-width: 760px) { .footer__top { grid-template-columns: 1.6fr 1fr 1fr; } }
 @media (min-width: 1040px) { .footer__top { grid-template-columns: 2fr 1fr 1.2fr 1fr; } }
 
-.footer__brand { display: inline-flex; align-items: center; gap: 0.7rem; margin-bottom: var(--s-4); }
-.footer__brand img { width: 42px; height: 42px; object-fit: contain; }
-.footer__brand .brand__word { color: var(--white); }
-.footer__brand .brand__word span { color: var(--beacon); }
+.footer__brand { display: inline-flex; margin-bottom: var(--s-4); }
+.footer__brand img { height: 56px; width: auto; }
 .footer__tag { font-size: var(--t-sm); max-width: 34ch; }
 
-.footer h4 {
+.footer h3, .footer h4 {
   font-size: var(--t-sm);
   font-weight: 600;
   color: var(--white);
@@ -958,4 +961,7 @@ select.control {
   body { color: #000; font-size: 11pt; }
   .band { padding-block: 1rem; }
   .band--deep, .band--abyss, .footer { background: #fff !important; color: #000 !important; }
+  /* The footer lockup is white artwork; on a white sheet it would vanish.
+     brightness(0) knocks it to solid black and leaves the alpha alone. */
+  .footer__brand img { filter: brightness(0); }
 }
