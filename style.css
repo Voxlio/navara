@@ -787,6 +787,123 @@ h1, h2, h3, h4 {
 .figure.is-empty img { display: none; }
 
 /* --------------------------------------------------------------------------
+   10b. Slider
+   --------------------------------------------------------------------------
+   A slider is just a .figure with more than one photograph in it, so it
+   inherits the aspect ratio, the duotone wash and the teal keyline and sits
+   in a layout exactly where a single figure would.
+
+   Crossfade rather than a horizontal push: the house style keeps motion to a
+   minimum, and a fade does not fight the tonal bands the way sliding does.
+
+   No-JS state is deliberate — the first slide carries .is-current in the
+   markup and the rest stay hidden, so the section degrades to one still
+   photograph. Every control is built by main.js, which means a browser with
+   scripting off never gets a dead button.
+   -------------------------------------------------------------------------- */
+
+/* .slider is always also a .figure, so the ratio, wash and keyline come
+   from there; this only guarantees the positioning context. */
+.slider { position: relative; }
+.slider__track { position: absolute; inset: 0; }
+
+.slider__slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.55s var(--ease), visibility 0s linear 0.55s;
+}
+.slider__slide.is-current {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.55s var(--ease), visibility 0s linear 0s;
+}
+
+/* Caption sits above the photograph and the wash (z-index 1) but below the
+   teal keyline (z-index 2) so the rule still reads across the corner. */
+.slider__cap {
+  position: absolute;
+  z-index: 1;
+  left: 0; right: 0; bottom: 0;
+  padding: var(--s-7) var(--s-4) var(--s-4);
+  font-size: var(--t-xs);
+  line-height: 1.45;
+  color: var(--white);
+  background: linear-gradient(to top, rgba(6, 20, 38, 0.88), rgba(6, 20, 38, 0));
+}
+
+.slider__nav {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2.5rem; height: 2.5rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--edge);
+  background: rgba(11, 31, 58, 0.55);
+  color: var(--white);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.slider__nav:hover {
+  background: var(--teal-ink);
+  border-color: var(--teal-ink);
+}
+.slider__nav--prev { left: var(--s-3); }
+.slider__nav--next { right: var(--s-3); }
+.slider__nav svg {
+  width: 17px; height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+
+/* Depth-gauge ticks rather than bubbles — same language as the strip rules. */
+.slider__dots {
+  position: absolute;
+  z-index: 3;
+  top: var(--s-3); right: var(--s-3);
+  display: flex;
+  gap: 5px;
+}
+.slider__dot {
+  display: grid;
+  align-items: center;
+  width: 22px; height: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.slider__dot::after {
+  content: "";
+  display: block;
+  width: 100%; height: 3px;
+  background: rgba(255, 255, 255, 0.45);
+  transition: background 0.2s var(--ease);
+}
+.slider__dot:hover::after { background: rgba(255, 255, 255, 0.85); }
+.slider__dot[aria-selected="true"]::after { background: var(--beacon); }
+
+@media (max-width: 600px) {
+  .slider__nav { width: 2.125rem; height: 2.125rem; }
+  .slider__cap { padding: var(--s-6) var(--s-3) var(--s-3); }
+}
+
+/* A carousel that moves on its own is a WCAG 2.2.2 problem for anyone who
+   needs motion stilled, so JS never starts the timer in that case. Killing
+   the crossfade here as well keeps the two in step. */
+@media (prefers-reduced-motion: reduce) {
+  .slider__slide { transition: none; }
+}
+
+/* --------------------------------------------------------------------------
    11. Contact & forms
    -------------------------------------------------------------------------- */
 
@@ -802,7 +919,8 @@ h1, h2, h3, h4 {
 .channel + .channel { border-top: 1px solid var(--mist-dk); }
 .channel h3, .channel h4 { color: var(--navy); }
 .channel a {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   margin-top: var(--s-2);
   font-weight: 600;
   color: var(--teal-ink);

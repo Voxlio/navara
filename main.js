@@ -81,6 +81,162 @@
     });
   }
 
+  /* ------------------------------------------------------------ Slider ---
+     Progressive enhancement, strictly. The markup ships as a stack of
+     slides with the first one carrying .is-current; every control below is
+     created here, so a browser with scripting off shows one still
+     photograph and no dead buttons.
+
+     ARIA follows the APG "carousel with tabbed slide picker": the dots are
+     a tablist, the slides are the tabpanels. Auto-rotation is off under
+     prefers-reduced-motion (WCAG 2.2.2), pauses on hover and on focus, and
+     stops for good the moment someone works the controls themselves.      */
+
+  function initSliders() {
+    var sliders = document.querySelectorAll('[data-slider]');
+    var stillness = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var DELAY = 6500;
+
+    Array.prototype.forEach.call(sliders, function (root, sliderIndex) {
+      var track = root.querySelector('.slider__track');
+      if (!track) return;
+
+      var slides = Array.prototype.slice.call(track.querySelectorAll('.slider__slide'));
+      if (slides.length < 2) return;
+
+      var uid = 'sl' + (sliderIndex + 1);
+      var current = Math.max(0, slides.indexOf(root.querySelector('.slider__slide.is-current')));
+      var timer = null;
+      var rotating = false;
+
+      root.setAttribute('role', 'group');
+      root.setAttribute('aria-roledescription', 'carousel');
+
+      /* ---- controls ---- */
+
+      function arrow(dir) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'slider__nav slider__nav--' + (dir < 0 ? 'prev' : 'next');
+        b.setAttribute('aria-label', dir < 0 ? 'Previous image' : 'Next image');
+        b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'
+          + (dir < 0 ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7') + '"/></svg>';
+        b.addEventListener('click', function () {
+          stop();
+          go(current + dir);
+        });
+        return b;
+      }
+
+      var dots = document.createElement('div');
+      dots.className = 'slider__dots';
+      dots.setAttribute('role', 'tablist');
+      dots.setAttribute('aria-label', 'Choose image');
+
+      var tabs = slides.map(function (slide, i) {
+        var panelId = uid + '-panel-' + i;
+        var tabId = uid + '-tab-' + i;
+        var label = (i + 1) + ' of ' + slides.length;
+
+        slide.id = panelId;
+        slide.setAttribute('role', 'tabpanel');
+        slide.setAttribute('aria-labelledby', tabId);
+
+        var tab = document.createElement('button');
+        tab.type = 'button';
+        tab.id = tabId;
+        tab.className = 'slider__dot';
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('aria-controls', panelId);
+        tab.setAttribute('aria-label', 'Image ' + label);
+        tab.addEventListener('click', function () {
+          stop();
+          go(i);
+        });
+        dots.appendChild(tab);
+        return tab;
+      });
+
+      // Roving tabindex across the picker, per the tablist pattern.
+      dots.addEventListener('keydown', function (e) {
+        var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        var target = e.key === 'Home' ? 0 : e.key === 'End' ? slides.length - 1 : null;
+        if (!step && target === null) return;
+        e.preventDefault();
+        stop();
+        go(target === null ? current + step : target);
+        tabs[current].focus();
+      });
+
+      root.appendChild(arrow(-1));
+      root.appendChild(arrow(1));
+      root.appendChild(dots);
+
+      /* ---- state ---- */
+
+      function go(i) {
+        current = (i + slides.length) % slides.length;
+        slides.forEach(function (slide, n) {
+          var on = n === current;
+          slide.classList.toggle('is-current', on);
+          tabs[n].setAttribute('aria-selected', String(on));
+          tabs[n].tabIndex = on ? 0 : -1;
+        });
+      }
+
+      function tick() { go(current + 1); }
+
+      function start() {
+        if (rotating || stillness.matches || document.hidden) return;
+        rotating = true;
+        track.setAttribute('aria-live', 'off');
+        timer = window.setInterval(tick, DELAY);
+      }
+
+      function pause() {
+        if (!rotating) return;
+        rotating = false;
+        window.clearInterval(timer);
+        track.setAttribute('aria-live', 'polite');
+      }
+
+      // A deliberate control press ends rotation permanently; a hover does not.
+      var halted = false;
+      function stop() { halted = true; pause(); }
+      function resume() { if (!halted) start(); }
+
+      go(current);
+      track.setAttribute('aria-live', 'polite');
+
+      root.addEventListener('mouseenter', pause);
+      root.addEventListener('mouseleave', resume);
+      root.addEventListener('focusin', pause);
+      root.addEventListener('focusout', function (e) {
+        if (!root.contains(e.relatedTarget)) resume();
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) pause(); else resume();
+      });
+
+      /* ---- swipe (touch and pen only, so mouse selection still works) ---- */
+
+      var startX = null;
+      root.addEventListener('pointerdown', function (e) {
+        startX = e.pointerType === 'mouse' ? null : e.clientX;
+      });
+      root.addEventListener('pointerup', function (e) {
+        if (startX === null) return;
+        var dx = e.clientX - startX;
+        startX = null;
+        if (Math.abs(dx) < 40) return;
+        stop();
+        go(current + (dx < 0 ? 1 : -1));
+      });
+
+      start();
+    });
+  }
+
   /* --------------------------------------------------------------- Form ---
      There is no mail backend on a static host, so the form hands off to the
      enquiries mailbox with the answers pre-filled, and says so plainly.     */
@@ -147,6 +303,7 @@
     initNav();
     initMasthead();
     initFigures();
+    initSliders();
     initForm();
     initYear();
   }
