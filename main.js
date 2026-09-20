@@ -299,11 +299,103 @@
     });
   }
 
+  /* ----------------------------------------------------------- Language --- */
+
+  /* The switcher itself works with no script — it is a <details>. This only
+     adds the two behaviours a native <details> lacks: closing when you click
+     away from it, and closing on Escape. */
+  function initLangMenu() {
+    var box = document.querySelector('.lang');
+    if (!box) return;
+
+    document.addEventListener('click', function (e) {
+      if (box.open && !box.contains(e.target)) box.open = false;
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !box.open) return;
+      box.open = false;
+      var btn = box.querySelector('.lang__btn');
+      if (btn) btn.focus();
+    });
+  }
+
+  /* Detect-and-offer. Deliberately NOT a redirect: Googlebot crawls from the
+     US without an Accept-Language header, so auto-redirecting would leave the
+     English pages unindexed, and plenty of readers in Lagos or Abidjan run an
+     en-US browser and want the original. So we surface a one-line offer the
+     reader can take or dismiss, and the dismissal sticks. */
+  var LANGS = {
+    fr: { name: 'Français', msg: 'Ce site est en anglais. Voulez-vous une traduction automatique en français ?', cta: 'Traduire' },
+    pt: { name: 'Português', msg: 'Este site está em inglês. Deseja uma tradução automática para português?', cta: 'Traduzir' },
+    es: { name: 'Español',  msg: 'Este sitio está en inglés. ¿Quiere una traducción automática al español?', cta: 'Traducir' }
+  };
+
+  function preferredLang() {
+    var list = navigator.languages && navigator.languages.length
+      ? navigator.languages
+      : [navigator.language || ''];
+
+    for (var i = 0; i < list.length; i++) {
+      var base = String(list[i]).toLowerCase().split('-')[0];
+      if (base === 'en') return null;   // English ranks first — no offer.
+      if (LANGS[base]) return base;
+    }
+    return null;
+  }
+
+  /* localStorage can be unavailable (private mode, blocked cookies), and a
+     throwing setItem must not take the rest of boot() down with it. */
+  function remembered(key, val) {
+    try {
+      if (val === undefined) return window.localStorage.getItem(key);
+      window.localStorage.setItem(key, val);
+    } catch (err) { /* no persistence available; the bar just reappears */ }
+    return null;
+  }
+
+  function initLangOffer() {
+    var bar = document.getElementById('langbar');
+    if (!bar) return;
+
+    if (remembered('navara.langbar') === 'dismissed') return;
+
+    var code = preferredLang();
+    if (!code) return;
+
+    /* The English link in the menu is this page's own path, which is exactly
+       what the translate.goog URL for the same page needs to be built from. */
+    var here = document.querySelector('.lang__opt.is-current');
+    var path = here ? here.getAttribute('href') : '/';
+
+    var msg = document.getElementById('langbar-msg');
+    var go = document.getElementById('langbar-go');
+    var close = document.getElementById('langbar-close');
+    if (!msg || !go || !close) return;
+
+    msg.textContent = LANGS[code].msg;
+    go.textContent = LANGS[code].cta;
+    go.setAttribute('hreflang', code);
+    go.setAttribute('lang', code);
+    go.href = 'https://navaraoffshore-com.translate.goog' + path
+      + '?_x_tr_sl=en&_x_tr_tl=' + code + '&_x_tr_hl=' + code;
+
+    bar.setAttribute('lang', code);
+    bar.hidden = false;
+
+    close.addEventListener('click', function () {
+      bar.hidden = true;
+      remembered('navara.langbar', 'dismissed');
+    });
+  }
+
   function boot() {
     initNav();
     initMasthead();
     initFigures();
     initSliders();
+    initLangMenu();
+    initLangOffer();
     initForm();
     initYear();
   }

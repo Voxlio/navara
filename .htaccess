@@ -1,0 +1,85 @@
+# ============================================================================
+# NAVARA OFFSHORE — Apache config
+# ----------------------------------------------------------------------------
+# One canonical URL shape for every page: extensionless, no trailing slash.
+#     https://navaraoffshore.com/            -> index.html
+#     https://navaraoffshore.com/about       -> about.html
+#     https://navaraoffshore.com/services    -> services.html
+#     https://navaraoffshore.com/contact     -> contact.html
+#
+# That shape is what the internal links, the <link rel="canonical"> tags, the
+# JSON-LD @id values and sitemap.xml all use. Every other shape (.html,
+# trailing slash, /index.html) 301s onto it so a page is never reachable at
+# two addresses.
+# ============================================================================
+
+RewriteEngine On
+RewriteBase /
+
+# ----------------------------------------------------------------------------
+# 1. Home. /index.html and /home both collapse onto the bare domain, which is
+#    what the home page canonical points at.
+# ----------------------------------------------------------------------------
+RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+RewriteRule ^index\.html$ / [R=301,L]
+
+RewriteRule ^home/?$ / [R=301,L]
+
+# ----------------------------------------------------------------------------
+# 2. Strip the .html extension on inbound requests (301, so link equity from
+#    any existing /about.html links transfers).
+#    THE_REQUEST is matched rather than REQUEST_URI so this only fires on a
+#    real browser request, never on the internal rewrite in step 4 — that is
+#    what stops the two rules looping into each other.
+# ----------------------------------------------------------------------------
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# ----------------------------------------------------------------------------
+# 3. Strip a trailing slash on anything that is not a real directory.
+#    Without this, /about/ falls through to a 404 because step 4 tests for the
+#    file "about/.html". Real directories (/images/) are left alone.
+# ----------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+# ----------------------------------------------------------------------------
+# 4. Serve the .html file for the clean URL, internally — the address bar keeps
+#    showing /about.
+# ----------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^([^/]+)$ $1.html [L]
+
+# ----------------------------------------------------------------------------
+# 5. Keep working files and repository metadata off the public web. A readable
+#    .git directory exposes the full source history.
+# ----------------------------------------------------------------------------
+RedirectMatch 404 ^/\.git(/|$)
+RedirectMatch 404 ^/imagesdraft(/|$)
+RedirectMatch 404 ^/(server\.js|package(-lock)?\.json)$
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ----------------------------------------------------------------------------
+# 6. Caching. The HTML must stay fresh; the fingerprinted-by-name assets and
+#    photography can sit in cache for a long time.
+# ----------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+  ExpiresByType image/x-icon              "access plus 1 year"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/xml
+</IfModule>

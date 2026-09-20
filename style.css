@@ -382,6 +382,111 @@ h1, h2, h3, h4 {
 .topbar__item { display: inline-flex; align-items: center; gap: 0.45rem; }
 .topbar__item svg { width: 14px; height: 14px; flex: none; opacity: 0.8; }
 
+/* Language switcher.
+   Built on <details>/<summary> so it opens, closes and takes keyboard focus
+   with no script at all; main.js only adds close-on-outside-click and Escape.
+   The panel is light-on-white while the bar around it is dark, so the colour
+   rules below are scoped with .topbar to outrank `.topbar a`. */
+.lang { position: relative; }
+
+.lang__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  list-style: none;          /* Firefox marker */
+  cursor: pointer;
+  transition: color 0.2s var(--ease);
+}
+.lang__btn::-webkit-details-marker { display: none; }
+.lang__btn svg { width: 14px; height: 14px; flex: none; opacity: 0.8; }
+.lang__now { font-weight: 500; letter-spacing: 0.01em; }
+.lang__btn:hover,
+.lang[open] > .lang__btn { color: var(--beacon); }
+.lang__caret { transition: transform 0.2s var(--ease); }
+.lang[open] .lang__caret { transform: rotate(180deg); }
+
+.lang__menu {
+  position: absolute;
+  z-index: 120;              /* above the sticky masthead, which sits at 100 */
+  top: calc(100% + 0.65rem);
+  right: 0;
+  min-width: 12.5rem;
+  padding-block: var(--s-2) var(--s-1);
+  border: 1px solid var(--mist-dk);
+  border-top: 2px solid var(--teal);
+  border-radius: var(--edge);
+  background: var(--white);
+  box-shadow: 0 14px 34px rgba(6, 20, 38, 0.26);
+}
+.lang__note {
+  margin: 0;
+  padding: 0 var(--s-4) var(--s-2);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  color: var(--slate);
+}
+.topbar .lang__opt {
+  display: block;
+  padding: 0.45rem var(--s-4);
+  color: var(--ink);
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+.topbar .lang__opt:hover { background: var(--mist); color: var(--teal-ink); }
+.topbar .lang__opt.is-current { color: var(--teal-ink); font-weight: 600; }
+.lang__opt.is-current::after { content: " \2713"; }
+
+/* Under ~520px the topbar wraps: the panel would run off the right edge, and
+   the globe plus caret carry the meaning on their own, so the language name
+   drops out rather than forcing another line. */
+@media (max-width: 520px) {
+  .lang__menu { right: auto; left: 0; }
+  .lang__now { display: none; }
+}
+
+/* Browser-language offer bar.
+   An offer, never an automatic redirect: redirecting on Accept-Language
+   leaves the English pages uncrawled (Googlebot sends none) and hijacks
+   readers who came for the original. Hidden until main.js finds a match. */
+.langbar {
+  background: var(--teal-ink);
+  color: var(--white);
+  font-size: var(--t-sm);
+}
+.langbar[hidden] { display: none; }
+.langbar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  padding-block: 0.7rem;
+}
+.langbar__msg { margin: 0; flex: 1 1 16rem; }
+.langbar__go {
+  flex: none;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--edge);
+  color: var(--white);
+  font-weight: 600;
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.langbar__go:hover { background: rgba(255, 255, 255, 0.16); border-color: var(--white); }
+.langbar__close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.75rem; height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--edge);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.langbar__close:hover { background: rgba(255, 255, 255, 0.18); }
+.langbar__close svg { width: 15px; height: 15px; }
+
 .masthead {
   position: sticky;
   top: 0;
@@ -806,6 +911,16 @@ h1, h2, h3, h4 {
    from there; this only guarantees the positioning context. */
 .slider { position: relative; }
 .slider__track { position: absolute; inset: 0; }
+
+/* Full-width variant: the section spans the page instead of sharing a row
+   with a text column. The frame itself stays portrait and centres, because
+   every source photograph is portrait — a landscape crop of these cuts the
+   nozzle rim, the flange body, the valve handwheel and the technician's
+   head. Capped so it reads as a deliberate centred plate. */
+.slider--full {
+  width: min(100%, 34rem);
+  margin-inline: auto;
+}
 
 .slider__slide {
   position: absolute;

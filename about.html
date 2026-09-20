@@ -7,7 +7,7 @@
   <meta name="description" content="Navara Offshore Limited is a Nigerian marine and offshore company built on operational understanding, commercial insight and maritime industry expertise.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
-  <link rel="canonical" href="https://navaraoffshore.com/about.html">
+  <link rel="canonical" href="https://navaraoffshore.com/about">
 
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -21,7 +21,7 @@
   <meta property="og:locale" content="en_GB">
   <meta property="og:title" content="About Navara Offshore | Marine &amp; Offshore Company, Nigeria">
   <meta property="og:description" content="Built around marine operations. Driven by what comes next.">
-  <meta property="og:url" content="https://navaraoffshore.com/about.html">
+  <meta property="og:url" content="https://navaraoffshore.com/about">
   <meta property="og:image" content="https://navaraoffshore.com/images/og-image.jpg">
   <meta property="og:image:alt" content="Navara Offshore Limited — marine and offshore operations">
   <meta property="og:image:width" content="1200">
@@ -38,6 +38,17 @@
 <body>
 
   <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Shown only when the browser reports a language we can offer. An offer,
+       never a redirect: auto-redirecting on browser language hides the English
+       pages from crawlers and hijacks visitors who wanted the original. -->
+  <div class="langbar" id="langbar" hidden>
+    <div class="shell langbar__inner">
+      <p class="langbar__msg" id="langbar-msg"></p>
+      <a class="langbar__go" id="langbar-go" href="/" rel="nofollow noopener"></a>
+      <button class="langbar__close" id="langbar-close" type="button" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </div>
 
   <div class="topbar">
     <div class="shell topbar__inner">
@@ -56,10 +67,21 @@
         </span>
       </div>
       <div class="topbar__group">
-        <a class="topbar__item" href="https://wa.me/2347072315548" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.01a9.9 9.9 0 0 0-8.58 14.85L2 22l5.3-1.38A9.9 9.9 0 1 0 12.04 2zm0 18.13a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.05-.2-.31a8.2 8.2 0 1 1 6.98 3.87zm4.52-6.14c-.25-.13-1.46-.72-1.69-.8-.22-.09-.39-.13-.55.12-.17.25-.63.8-.78.97-.14.16-.28.18-.53.06-.25-.13-1.05-.39-2-1.23a7.5 7.5 0 0 1-1.38-1.72c-.15-.25-.02-.38.11-.5.11-.12.25-.29.37-.44.13-.15.17-.25.25-.42.09-.17.05-.31-.02-.44-.06-.12-.55-1.34-.76-1.83-.2-.47-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2s.86 2.32.98 2.48c.12.17 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.19 1.11.16 1.53.1.46-.07 1.46-.6 1.66-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.17-.48-.29z"/></svg>
-          WhatsApp
-        </a>
+        <details class="lang">
+          <summary class="lang__btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.4 3.9 5.6 3.9 9s-1.4 6.6-3.9 9c-2.5-2.4-3.9-5.6-3.9-9S9.5 5.4 12 3z"/></svg>
+            <span class="sr-only">Language:</span>
+            <span class="lang__now">English</span>
+            <svg class="lang__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="lang__menu">
+            <p class="lang__note">Machine translation by Google</p>
+            <a class="lang__opt is-current" href="/about" aria-current="true">English</a>
+            <a class="lang__opt" hreflang="fr" rel="nofollow noopener" href="https://navaraoffshore-com.translate.goog/about?_x_tr_sl=en&amp;_x_tr_tl=fr&amp;_x_tr_hl=fr">Français</a>
+            <a class="lang__opt" hreflang="pt" rel="nofollow noopener" href="https://navaraoffshore-com.translate.goog/about?_x_tr_sl=en&amp;_x_tr_tl=pt&amp;_x_tr_hl=pt">Português</a>
+            <a class="lang__opt" hreflang="es" rel="nofollow noopener" href="https://navaraoffshore-com.translate.goog/about?_x_tr_sl=en&amp;_x_tr_tl=es&amp;_x_tr_hl=es">Español</a>
+          </div>
+        </details>
         <a href="https://www.linkedin.com/company/navara-offshore-ltd/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
@@ -67,21 +89,21 @@
 
   <header class="masthead">
     <div class="shell masthead__inner">
-      <a class="brand" href="index.html" aria-label="Navara Offshore Limited — home">
+      <a class="brand" href="/" aria-label="Navara Offshore Limited — home">
         <img class="brand__lockup" src="images/logo-lockup-navy.png"
              alt="Navara Offshore Limited" width="800" height="224">
       </a>
 
       <nav class="nav" id="primary-nav" aria-label="Primary">
-        <a class="nav__link" href="index.html">Home</a>
-        <a class="nav__link" href="about.html" aria-current="page">About us</a>
-        <a class="nav__link" href="services.html">Services</a>
-        <a class="nav__link" href="contact.html">Contact us</a>
-        <div class="nav__cta"><a class="btn btn--solid btn--block" href="contact.html">Start an enquiry</a></div>
+        <a class="nav__link" href="/">Home</a>
+        <a class="nav__link" href="/about" aria-current="page">About Us</a>
+        <a class="nav__link" href="/services">Services</a>
+        <a class="nav__link" href="/contact">Contact Us</a>
+        <div class="nav__cta"><a class="btn btn--solid btn--block" href="/contact">Start an Enquiry</a></div>
       </nav>
 
       <div class="masthead__cta">
-        <a class="btn btn--solid" href="contact.html">Start an enquiry</a>
+        <a class="btn btn--solid" href="/contact">Start an Enquiry</a>
       </div>
 
       <button class="burger" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
@@ -100,11 +122,11 @@
       <div class="shell">
         <div class="pagehead__inner">
           <ul class="crumbs">
-            <li><a href="index.html">Home</a></li>
-            <li>About us</li>
+            <li><a href="/">Home</a></li>
+            <li>About Us</li>
           </ul>
           <p class="label">About Navara</p>
-          <h1 class="t-h1">Built Around Marine Operations. Driven By What Comes Next.</h1>
+          <h1 class="t-h1">Built Around Marine Operations. Driven by What Comes Next.</h1>
           <p class="lede">Navara Offshore is built on a practical understanding of marine operations and a forward-looking view of where the industry is going.</p>
         </div>
       </div>
@@ -144,7 +166,7 @@
         </div>
         <div>
           <p class="label">Perspective</p>
-          <h2 class="t-h1">Marine Expertise With A Wider Perspective</h2>
+          <h2 class="t-h1">Marine Expertise With a Wider Perspective</h2>
           <div class="prose mt-5">
             <p>Navara Offshore is a marine and offshore company providing services across vessel operations, fleet management, chartering, offshore logistics, procurement, technical support and maritime technology.</p>
             <p>We understand that effective marine operations depend on people, planning, maintenance, logistics, suppliers, ports, regulations, technology and commercial decisions working together. That wider perspective informs how we support our clients.</p>
@@ -158,7 +180,7 @@
       <div class="shell">
         <div class="head head--center">
           <p class="label label--center">Our Approach</p>
-          <h2 class="t-h1">We Look Beyond The Vessel</h2>
+          <h2 class="t-h1">We Look Beyond the Vessel</h2>
           <p class="lede">Before supporting an assignment, we consider the operating environment, the client's requirements and the resources needed to deliver effectively.</p>
           <p class="lede">Our approach connects operational, commercial and technical considerations to support better outcomes.</p>
         </div>
@@ -178,27 +200,27 @@
           <article class="svc">
             <h3 class="t-h3">Marine Operations</h3>
             <p>Fleet management, vessel management and chartering support designed around the operational and commercial requirements of marine assets.</p>
-            <a class="tlink" href="services.html" aria-label="View services: marine operations">View services</a>
+            <a class="tlink" href="/services" aria-label="View services: marine operations">View services</a>
           </article>
           <article class="svc">
             <h3 class="t-h3">Offshore &amp; Logistics</h3>
             <p>Offshore logistics, marine transportation and operational coordination supporting activities across marine-dependent industries.</p>
-            <a class="tlink" href="services.html" aria-label="View services: offshore and logistics">View services</a>
+            <a class="tlink" href="/services" aria-label="View services: offshore and logistics">View services</a>
           </article>
           <article class="svc">
             <h3 class="t-h3">Supply &amp; Procurement</h3>
             <p>Sourcing and procurement of marine, offshore and industrial equipment, materials and services.</p>
-            <a class="tlink" href="services.html" aria-label="View services: supply and procurement">View services</a>
+            <a class="tlink" href="/services" aria-label="View services: supply and procurement">View services</a>
           </article>
           <article class="svc">
             <h3 class="t-h3">Technical Support</h3>
             <p>Coordination of repairs, maintenance, dry-docking and specialist marine requirements through qualified technical providers and partners.</p>
-            <a class="tlink" href="services.html" aria-label="View services: technical support">View services</a>
+            <a class="tlink" href="/services" aria-label="View services: technical support">View services</a>
           </article>
           <article class="svc">
             <h3 class="t-h3">Maritime Technology</h3>
             <p>Technology-enabled approaches to maritime awareness, security and operational visibility.</p>
-            <a class="tlink" href="services.html" aria-label="View services: maritime technology">View services</a>
+            <a class="tlink" href="/services" aria-label="View services: maritime technology">View services</a>
           </article>
         </div>
       </div>
@@ -234,7 +256,7 @@
       <div class="shell">
         <div class="head head--center">
           <p class="label label--center">Guiding Principles</p>
-          <h2 class="t-h1">Our values</h2>
+          <h2 class="t-h1">Our Values</h2>
         </div>
 
         <div class="grid">
@@ -242,7 +264,7 @@
             <h3 class="t-h4">Integrity</h3>
             <ul class="checks mt-4">
               <li>Transparency</li>
-              <li>Clear communication</li>
+              <li>Clear Communication</li>
               <li>Accountability</li>
             </ul>
           </div>
@@ -250,28 +272,28 @@
             <h3 class="t-h4">Operational Excellence</h3>
             <ul class="checks mt-4">
               <li>Preparation</li>
-              <li>Attention to detail</li>
-              <li>Responsible execution</li>
+              <li>Attention to Detail</li>
+              <li>Responsible Execution</li>
             </ul>
           </div>
           <div class="panel">
             <h3 class="t-h4">Safety and Responsibility</h3>
             <ul class="checks mt-4">
-              <li>Protecting people</li>
-              <li>Assets &amp; Operating environment</li>
+              <li>Protecting People</li>
+              <li>Assets &amp; Operating Environment</li>
             </ul>
           </div>
           <div class="panel">
             <h3 class="t-h4">Collaboration</h3>
             <ul class="checks mt-4">
-              <li>Building effective relationships across stakeholders</li>
+              <li>Building Effective Relationships Across Stakeholders</li>
             </ul>
           </div>
           <div class="panel">
             <h3 class="t-h4">Forward Thinking</h3>
             <ul class="checks mt-4">
-              <li>Embracing better methods</li>
-              <li>Partnerships &amp; technology</li>
+              <li>Embracing Better Methods</li>
+              <li>Partnerships &amp; Technology</li>
             </ul>
           </div>
         </div>
@@ -283,13 +305,13 @@
       <div class="shell split split--even">
         <div>
           <p class="label">Core Experience</p>
-          <h2 class="t-h1">Practical operational capabilities</h2>
+          <h2 class="t-h1">Practical Operational Capabilities</h2>
           <div class="prose mt-5">
             <p>We apply this experience with a focus on practical execution, clear communication and the wider commercial objective.</p>
           </div>
         </div>
         <div class="btns">
-          <a class="btn btn--solid" href="services.html">Explore our services</a>
+          <a class="btn btn--solid" href="/services">Explore Our Services</a>
         </div>
       </div>
     </section>
@@ -298,7 +320,7 @@
     <section class="band">
       <div class="shell center">
         <p class="label label--center">Safety &amp; Compliance</p>
-        <h2 class="t-h1">Safety is part of the operation</h2>
+        <h2 class="t-h1">Safety Is Part of the Operation</h2>
         <div class="prose mt-5">
           <p>Safety, compliance and operational risk awareness are integral to responsible marine and offshore operations.</p>
           <p>We apply sound HSE practices, risk assessment, maintenance planning and emergency preparedness, while coordinating with qualified specialists where required.</p>
@@ -312,13 +334,13 @@
       <div class="shell split split--text-lead">
         <div>
           <p class="label">Leadership</p>
-          <h2 class="t-h1">Operational perspective. Commercial awareness. Long term thinking.</h2>
+          <h2 class="t-h1">Operational Perspective. Commercial Awareness. Long Term Thinking.</h2>
           <div class="prose mt-5">
             <p>Navara's leadership approach combines practical marine understanding with a focus on strong relationships, capable partnerships and sustainable growth.</p>
           </div>
         </div>
         <div class="panel">
-          <h3 class="t-h3">Operational leadership</h3>
+          <h3 class="t-h3">Operational Leadership</h3>
           <p class="pull mt-4">Navara Offshore executive direction</p>
           <div class="prose mt-4">
             <p>Focused on connecting marine assets, technical coordination and operational integrity across maritime corridors.</p>
@@ -333,8 +355,8 @@
         <h2 class="t-h1">Building for the Marine Industry Ahead</h2>
         <p class="lede mt-4">We remain focused on building practical capability, strong partnerships and lasting value across Africa's marine and offshore industry.</p>
         <div class="btns btns--center mt-6">
-          <a class="btn btn--solid" href="services.html">Explore Our Services</a>
-          <a class="btn btn--line-light" href="contact.html">Talk to Navara</a>
+          <a class="btn btn--solid" href="/services">Explore Our Services</a>
+          <a class="btn btn--line-light" href="/contact">Talk to Navara</a>
         </div>
       </div>
     </section>
@@ -344,7 +366,7 @@
   <footer class="footer">
     <div class="shell footer__top">
       <div>
-        <a class="footer__brand" href="index.html" aria-label="Navara Offshore Limited — home">
+        <a class="footer__brand" href="/" aria-label="Navara Offshore Limited — home">
           <img src="images/logo-lockup-white.png"
                alt="Navara Offshore Limited" width="800" height="224">
         </a>
@@ -353,17 +375,16 @@
       <div>
         <h3>Pages</h3>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About us</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact us</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/contact">Contact Us</a></li>
         </ul>
       </div>
       <div>
         <h3>Contact</h3>
         <ul>
           <li><a href="tel:+2347072315548">Call +234 707 231 5548</a></li>
-          <li><a href="https://wa.me/2347072315548" target="_blank" rel="noopener">WhatsApp +234 707 231 5548</a></li>
           <li><a href="mailto:enquiries@navaraoffshore.com">enquiries@navaraoffshore.com</a></li>
           <li>Lekki, Lagos, Nigeria</li>
         </ul>
@@ -438,20 +459,6 @@
             "contactType": "sales",
             "telephone": "+234-707-231-5548",
             "email": "enquiries@navaraoffshore.com",
-            "contactOption": "TollFree",
-            "availableLanguage": [
-              "English"
-            ],
-            "areaServed": [
-              "NG",
-              "Africa"
-            ]
-          },
-          {
-            "@type": "ContactPoint",
-            "contactType": "customer support",
-            "telephone": "+234-707-231-5548",
-            "url": "https://wa.me/2347072315548",
             "availableLanguage": [
               "English"
             ],
@@ -480,8 +487,8 @@
           "WebPage",
           "AboutPage"
         ],
-        "@id": "https://navaraoffshore.com/about.html#webpage",
-        "url": "https://navaraoffshore.com/about.html",
+        "@id": "https://navaraoffshore.com/about#webpage",
+        "url": "https://navaraoffshore.com/about",
         "name": "About Navara Offshore | Marine & Offshore Company, Nigeria",
         "description": "A Nigerian marine and offshore company built on operational understanding, commercial insight and maritime industry expertise.",
         "isPartOf": {
@@ -492,12 +499,12 @@
         },
         "inLanguage": "en",
         "breadcrumb": {
-          "@id": "https://navaraoffshore.com/about.html#breadcrumb"
+          "@id": "https://navaraoffshore.com/about#breadcrumb"
         }
       },
       {
         "@type": "BreadcrumbList",
-        "@id": "https://navaraoffshore.com/about.html#breadcrumb",
+        "@id": "https://navaraoffshore.com/about#breadcrumb",
         "itemListElement": [
           {
             "@type": "ListItem",
@@ -508,8 +515,8 @@
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "About us",
-            "item": "https://navaraoffshore.com/about.html"
+            "name": "About Us",
+            "item": "https://navaraoffshore.com/about"
           }
         ]
       }
