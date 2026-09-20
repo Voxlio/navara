@@ -1,0 +1,8 @@
+{
+  "liveServer.settings.mount": [
+    ["/home", "./index.html"],
+    ["/about", "./about.html"],
+    ["/services", "./services.html"],
+    ["/contact", "./contact.html"]
+  ]
+}

@@ -66,18 +66,36 @@ RedirectMatch 404 ^/(server\.js|package(-lock)?\.json)$
 </IfModule>
 
 # ----------------------------------------------------------------------------
-# 6. Caching. The HTML must stay fresh; the fingerprinted-by-name assets and
-#    photography can sit in cache for a long time.
+# 6. Caching.
+#
+#    HTML always revalidates (0 seconds) — pages should never go stale.
+#
+#    CSS and JS are NOT fingerprinted by filename here (style.css, main.js
+#    keep the same name across edits), so long expiry times previously caused
+#    a real bug: after re-uploading new versions of these files, browsers and
+#    intermediate caches kept serving the OLD cached copy for up to a year,
+#    since the URL never changed. These now use a short cache window plus
+#    must-revalidate, so an edit shows up the same day without needing a
+#    manual cache purge, while still avoiding a fresh download on every load.
+#
+#    Images and icons are safe to cache for a long time, since new photos are
+#    normally added under new filenames rather than overwriting old ones.
 # ----------------------------------------------------------------------------
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/html                 "access plus 0 seconds"
-  ExpiresByType text/css                  "access plus 1 year"
-  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType text/css                  "access plus 1 hour"
+  ExpiresByType application/javascript    "access plus 1 hour"
   ExpiresByType image/jpeg                "access plus 1 year"
   ExpiresByType image/png                 "access plus 1 year"
   ExpiresByType image/svg+xml             "access plus 1 year"
   ExpiresByType image/x-icon              "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "max-age=3600, must-revalidate"
+  </FilesMatch>
 </IfModule>
 
 <IfModule mod_deflate.c>
